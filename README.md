@@ -42,7 +42,7 @@ O Frontend está rodando na porta `3000` e o Backend na porta `3001`. Seguem as 
   `/api-docs`: </br>
     - GET: documentação com exemplos de todos os endpoints disponíveis na Api; </br>
 
-  `/register`: </>
+  `/register`: </br>
     - POST: cria login para novos clientes; </br>
 
   `/login`: </br>
