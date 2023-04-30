@@ -1,0 +1,933 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Documentação da Api Delivery App",
+    "description": "Objetivo dessa documentação é mostrar os endpoints disponíveis, corpo de requisição necessário e objetos de retorno",
+    "contact": {
+      "url": "https://www.linkedin.com/in/fabiano-desouza/"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001/",
+      "description": "Api em ambiente de desenvolvimento"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "Realizar login",
+        "description": "Rota responsável por autenticar usuário cadastrado no banco de dados.",
+        "tags": ["Login"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              },
+              "examples": {
+                "login": {
+                  "value": {
+                    "email": "zebirita@email.com",
+                    "password": "$#zebirita#$"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": 404,
+                  "message": "Email or password invalid"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number"
+                    },
+                    "user": {
+                      "id":{
+                        "type": "number"
+                      },
+                      "name":{
+                        "type": "string"
+                      },
+                      "email":{
+                        "type": "string"
+                      },
+                      "role": {
+                        "type": "string"
+                      }
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": 200,
+                  "user": {
+                    "id": 1,
+                    "name": "Delivery App Admin",
+                    "email": "adm@deliveryapp.com",
+                    "role": "administrator"
+                  },
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkRlbGl2ZXJ5IEFwcCBBZG1pbiIsImVtYWlsIjoiYWRtQGRlbGl2ZXJ5YXBwLmNvbSIsInJvbGUiOiJhZG1pbmlzdHJhdG9yIiwiaWF0IjoxNjgwNzIzOTYwfQ.vq5IllTBqfjBSteOL8ICpZ8qFJSuFgI9nsyxElxfA1s"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "summary": "Criar novo usuario",
+        "description": "Rota responsável por cadastrar novo usuário no banco de dados.",
+        "tags": ["Register"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewUser"
+              },
+              "examples": {
+                "newUser": {
+                  "value": {
+                    "name": "Teste da Silva",
+                    "email": "teste@teste.com",
+                    "password": "teste1234"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": 409,
+                  "message": "Email or Name already registered"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number"
+                    },
+                    "user": {
+                      "id":{
+                        "type": "number"
+                      },
+                      "name":{
+                        "type": "string"
+                      },
+                      "email":{
+                        "type": "string"
+                      },
+                      "role": {
+                        "type": "string"
+                      }
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": 201,
+                  "user": {
+                    "id": 1,
+                    "name": "Delivery App Admin",
+                    "email": "adm@deliveryapp.com",
+                    "role": "administrator"
+                  },
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkRlbGl2ZXJ5IEFwcCBBZG1pbiIsImVtYWlsIjoiYWRtQGRlbGl2ZXJ5YXBwLmNvbSIsInJvbGUiOiJhZG1pbmlzdHJhdG9yIiwiaWF0IjoxNjgwNzIzOTYwfQ.vq5IllTBqfjBSteOL8ICpZ8qFJSuFgI9nsyxElxfA1s"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/products": {
+      "get": {
+        "summary": "Lista os produtos",
+        "description": "Rota responsável por listar todos produtos cadastrados no banco de dados.",
+        "tags": ["Customer"],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 1,
+                    "name": "Skol Lata 250ml",
+                    "price": "2.20",
+                    "url_image": "http://localhost:3001/images/skol_lata_350ml.jpg"
+                  },
+                  {
+                    "id": 2,
+                    "name": "Heineken 600ml",
+                    "price": "7.50",
+                    "url_image": "http://localhost:3001/images/heineken_600ml.jpg"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/checkout": {
+      "get": {
+        "summary": "Lista os vendedores",
+        "description": "Rota responsável por listar todos os vendedores cadastrados no banco de dados.",
+        "tags": ["Customer"],
+        "security": [{ "ApiKeyAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "example": [
+                  {
+                    "id": 2,
+                    "name": "Fulana Pereira",
+                    "email": "fulana@deliveryapp.com",
+                    "role": "seller"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Registra novo pedido",
+        "description": "Rota responsável por registar pedido relizado pelo usuario no banco de dados.",
+        "tags": ["Customer"],
+        "security": [{ "ApiKeyAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewOrder"
+              },
+              "examples": {
+                "order": {
+                  "value": {
+                    "sellerId": 3,
+	                  "totalPrice": 28.46,
+	                  "deliveryAddress": "Rua teste, Sao Paulo",
+	                  "deliveryNumber": "400",
+	                  "products": [
+	                  	{
+	                  		"productId": 1,
+	                  		"quantity": 2
+	                  	},
+	                  	{
+	                  		"productId": 2,
+	                  		"quantity": 3
+	                  	}
+	                  ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": {"orderId": 5 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/orders": {
+      "get": {
+        "summary": "Lista os pedidos do usuario logado",
+        "description": "Rota responsável por listar todos os pedidos cadastrados no banco de dados.",
+        "tags": ["Customer"],
+        "security": [{ "ApiKeyAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 1,
+                    "userId": 1,
+                    "sellerId": 2,
+                    "totalPrice": "28.46",
+                    "deliveryAddress": "Rua teste, Sao Paulo",
+                    "deliveryNumber": "400",
+                    "saleDate": "2023-04-03T21:33:50.000Z",
+                    "status": "Teste",
+                    "user": {
+                      "name": "Delivery App Admin",
+                      "email": "adm@deliveryapp.com"
+                    },
+                    "seller": {
+                      "name": "Fulana Pereira",
+                      "email": "fulana@deliveryapp.com"
+                    },
+                    "salesProducts": [
+                      {
+                        "saleId": 1,
+                        "productId": 1,
+                        "quantity": 2
+                      },
+                      {
+                        "saleId": 1,
+                        "productId": 2,
+                        "quantity": 3
+                      }
+                    ],
+                    "products": [
+                      {
+                        "id": 1,
+                        "name": "Skol Lata 250ml",
+                        "price": "2.20",
+                        "urlImage": "http://localhost:3001/images/skol_lata_350ml.jpg"
+                      },
+                      {
+                        "id": 2,
+                        "name": "Heineken 600ml",
+                        "price": "7.50",
+                        "urlImage": "http://localhost:3001/images/heineken_600ml.jpg"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer/orders/{id}": {
+      "get": {
+        "summary": "Lista detalhes do pedido",
+        "description": "Rota responsável por listar os detalhes do pedido especificado por id.",
+        "tags": ["Customer"],
+        "security": [{ "ApiKeyAuth": [] }],
+        "parameters": [
+          {
+          "name": "id",
+          "in": "path",
+          "description": "ID do pedido",
+          "required": true,
+          "type": "integer",
+          "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 1,
+		                "userId": 1,
+		                "sellerId": 2,
+		                "totalPrice": "28.46",
+		                "deliveryAddress": "Rua teste, Sao Paulo",
+		                "deliveryNumber": "400",
+		                "saleDate": "2023-04-03T21:33:50.000Z",
+		                "status": "Pendente",
+		                "user": {
+		                	"id": 1,
+		                	"name": "Delivery App Admin",
+		                	"email": "adm@deliveryapp.com"
+		                },
+		                "seller": {
+		                	"id": 2,
+		                	"name": "Fulana Pereira",
+		                	"email": "fulana@deliveryapp.com"
+		                },
+		                "products": [
+		                	{
+		                		"id": 1,
+		                		"name": "Skol Lata 250ml",
+		                		"price": "2.20",
+		                		"urlImage": "http://localhost:3001/images/skol_lata_350ml.jpg",
+		                		"SaleProduct": {
+		                			"saleId": 1,
+		                			"productId": 1,
+		                			"quantity": 2
+		                		}
+		                	},
+		                	{
+		                		"id": 2,
+		                		"name": "Heineken 600ml",
+		                		"price": "7.50",
+		                		"urlImage": "http://localhost:3001/images/heineken_600ml.jpg",
+		                		"SaleProduct": {
+		                			"saleId": 1,
+		                			"productId": 2,
+		                			"quantity": 3
+		                		}
+		                	}
+		                ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza status do pedido",
+        "description": "O usuario que criou o pedido pode atualizar o statudRota responsável por atualizar o status do pedido especificado por id.",
+        "tags": ["Customer"],
+        "security": [{ "ApiKeyAuth": [] }],
+        "parameters": [
+          {
+          "name": "id",
+          "in": "path",
+          "description": "ID do pedido",
+          "required": true,
+          "type": "integer",
+          "format": "int64"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusOrder"
+              },
+              "examples": {
+                "statusOrder": {
+                  "value": {
+                    "status": "Entregue"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "userId": 1,
+                  "sellerId": 2,
+                  "totalPrice": "28.46",
+                  "deliveryAddress": "Rua teste, Sao Paulo",
+                  "deliveryNumber": "400",
+                  "saleDate": "2023-04-03T21:33:50.000Z",
+                  "status": "Entregue"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/seller/orders": {
+      "get": {
+        "summary": "Lista os pedidos do vendedor logado",
+        "description": "Rota responsável por listar todos os pedidos cadastrados no banco de dados.",
+        "tags": ["Seller"],
+        "security": [{ "ApiKeyAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 1,
+                    "userId": 1,
+                    "sellerId": 2,
+                    "totalPrice": "28.46",
+                    "deliveryAddress": "Rua teste, Sao Paulo",
+                    "deliveryNumber": "400",
+                    "saleDate": "2023-04-03T21:33:50.000Z",
+                    "status": "Teste",
+                    "user": {
+                      "name": "Delivery App Admin",
+                      "email": "adm@deliveryapp.com"
+                    },
+                    "seller": {
+                      "name": "Fulana Pereira",
+                      "email": "fulana@deliveryapp.com"
+                    },
+                    "salesProducts": [
+                      {
+                        "saleId": 1,
+                        "productId": 1,
+                        "quantity": 2
+                      },
+                      {
+                        "saleId": 1,
+                        "productId": 2,
+                        "quantity": 3
+                      }
+                    ],
+                    "products": [
+                      {
+                        "id": 1,
+                        "name": "Skol Lata 250ml",
+                        "price": "2.20",
+                        "urlImage": "http://localhost:3001/images/skol_lata_350ml.jpg"
+                      },
+                      {
+                        "id": 2,
+                        "name": "Heineken 600ml",
+                        "price": "7.50",
+                        "urlImage": "http://localhost:3001/images/heineken_600ml.jpg"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/seller/orders/{id}": {
+      "get": {
+        "summary": "Lista detalhes do pedido",
+        "description": "Rota responsável por listar os detalhes do pedido especificado por id.",
+        "tags": ["Seller"],
+        "security": [{ "ApiKeyAuth": [] }],
+        "parameters": [
+          {
+          "name": "id",
+          "in": "path",
+          "description": "ID do pedido",
+          "required": true,
+          "type": "integer",
+          "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 1,
+		                "userId": 1,
+		                "sellerId": 2,
+		                "totalPrice": "28.46",
+		                "deliveryAddress": "Rua teste, Sao Paulo",
+		                "deliveryNumber": "400",
+		                "saleDate": "2023-04-03T21:33:50.000Z",
+		                "status": "Pendente",
+		                "user": {
+		                	"id": 1,
+		                	"name": "Delivery App Admin",
+		                	"email": "adm@deliveryapp.com"
+		                },
+		                "seller": {
+		                	"id": 2,
+		                	"name": "Fulana Pereira",
+		                	"email": "fulana@deliveryapp.com"
+		                },
+		                "products": [
+		                	{
+		                		"id": 1,
+		                		"name": "Skol Lata 250ml",
+		                		"price": "2.20",
+		                		"urlImage": "http://localhost:3001/images/skol_lata_350ml.jpg",
+		                		"SaleProduct": {
+		                			"saleId": 1,
+		                			"productId": 1,
+		                			"quantity": 2
+		                		}
+		                	},
+		                	{
+		                		"id": 2,
+		                		"name": "Heineken 600ml",
+		                		"price": "7.50",
+		                		"urlImage": "http://localhost:3001/images/heineken_600ml.jpg",
+		                		"SaleProduct": {
+		                			"saleId": 1,
+		                			"productId": 2,
+		                			"quantity": 3
+		                		}
+		                	}
+		                ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza status do pedido",
+        "description": "O vendedor citado no pedido pode atualizar o status do pedido especificado por id.",
+        "tags": ["Seller"],
+        "security": [{ "ApiKeyAuth": [] }],
+        "parameters": [
+          {
+          "name": "id",
+          "in": "path",
+          "description": "ID do pedido",
+          "required": true,
+          "type": "integer",
+          "format": "int64"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusOrder"
+              },
+              "examples": {
+                "statusOrder": {
+                  "value": {
+                    "status": "Preparando"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "userId": 1,
+                  "sellerId": 2,
+                  "totalPrice": "28.46",
+                  "deliveryAddress": "Rua teste, Sao Paulo",
+                  "deliveryNumber": "400",
+                  "saleDate": "2023-04-03T21:33:50.000Z",
+                  "status": "Preparando"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/manage": {
+      "get": {
+        "summary": "Lista todos os usuarios cadastrados",
+        "description": "Rota responsável por listar todos os usuarios (customer, sellers e administrators).",
+        "tags": ["Admin"],
+        "security": [{ "ApiKeyAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 2,
+                    "name": "Fulana Pereira",
+                    "email": "fulana@deliveryapp.com",
+                    "role": "seller"
+                  },
+                  {
+                    "id": 3,
+                    "name": "Cliente Zé Birita",
+                    "email": "zebirita@email.com",
+                    "role": "customer"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Criar novo usuario (modo Admin)",
+        "description": "Rota responsável por cadastrar novo usuário com uma das roles disponiveis.",
+        "tags": ["Admin"],
+        "security": [{ "ApiKeyAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminNewUser"
+              },
+              "examples": {
+                "newUser": {
+                  "value": {
+                    "name": "Teste da Silva",
+                    "email": "teste@teste.com",
+                    "password": "teste1234",
+                    "role": "administrator"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": 409,
+                  "message": "Email or Name already registered"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 13,
+                  "name": "teste da costa 2",
+                  "email": "teste13@aaaa",
+                  "role": "administrator"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletar usuario",
+        "description": "Usuario será removido da tabela de usuarios e nao conseguirá mais realizar o login no sistema. O histórico de pedidos realizados será mantido.",
+        "tags": ["Admin"],
+        "security": [{ "ApiKeyAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "deleteUser": {
+                  "value": {
+                    "userId": 4
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "NewUser": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "string"
+          },
+          "url_image": {
+            "type": "string"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        }
+      },
+      "NewOrder": {
+        "type": "object",
+        "properties": {
+          "sellerId": {
+            "type": "number"
+          },
+          "totalPrice": {
+            "type": "number"
+          },
+          "deliveryAddress": {
+            "type": "string"
+          },
+          "deliveryNumber": {
+            "type": "string"
+          },
+          "products": [
+            {
+              "productId": {
+                "type": "number"
+              },
+              "quantity": {
+                "type": "number"
+              }
+            }
+          ]
+        }
+      },
+      "StatusOrder": {
+        "type": "object",
+        "properties": {
+          "Status": {
+            "type": "string",
+            "enum": ["Entregue", "Preparando", "Em Trânsito"]
+          }
+        }
+      },
+      "AdminNewUser": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["customer", "seller", "adminstrator"]
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "authorization"
+      }
+    }
+  }
+}
