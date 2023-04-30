@@ -1,13 +1,13 @@
 # 🍻 Projeto Delivery App!
 
 Delivery App é uma aplicação full stack desenvolvida para ser um site de compras de bebidas online.
-O sistema possui 3 fluxos pincipais: Cliente, Vendedor e Admin.
+O sistema possui 3 fluxos principais: Cliente, Vendedor e Admin.
 
 Clientes realizam seus pedidos e conseguem acompanhar o tracking da preparação até a entrega. Além de poder consultar o histórico de pedidos anteriores.
 
 Os vendedores visualizam todos os pedidos que estão pendentes de preparação e atualizam o status do tracking até serem enviados aos clientes.
 
-Todo controle de acesso é feito pelo modulo Admin, onde são criados os logins para os vendedores/clientes/admins. (Clientes podem criar seu próprio login através de formulário de cadastro no site)
+Todo controle de acesso é feito pelo fluxo do Admin, onde são criados os logins para os vendedores/clientes/admins. (Clientes podem criar seu próprio login através de formulário de cadastro no site)
 
 O desenvolvimento desse projeto foi realizado durante o curso de Desenvolvimento Web na [Trybe](https://www.betrybe.com/)!
 
