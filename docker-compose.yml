@@ -1,0 +1,66 @@
+version: '3.9'
+services:
+  frontend:
+    container_name: delivery_frontend
+    build: ./front-end
+    ports:
+      - 3000:3000
+    platform: linux/x86_64
+    working_dir: /front-end
+    depends_on:
+      backend:
+        condition: service_healthy
+    # Os `healthcheck` garantem que a aplicação está operacional, antes de liberar o container
+    healthcheck:
+      test: ["CMD", "lsof", "-t", "-i:3000"]  # Caso utilize outra porta interna para o front, altere ela aqui também
+      timeout: 10s
+      retries: 5
+  backend:
+    container_name: delivery_backend
+    build: ./back-end
+    ports:
+      - 3001:3001
+    platform: linux/x86_64
+    working_dir: /back-end
+    # command e volumes habilitam a atualização do codigo para os containers durante o desenvolvimento, sem precisar ficar fazendo down e up dos containers
+    command: dev 
+    volumes: 
+      - ./back-end/src:/back-end/src
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=development
+      - API_PORT=3001
+      - MYSQL_HOST=delivery_db
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+      - MYSQL_DB_NAME=delivery-app
+      - EVAL_ALWAYS_RESTORE_DEV_DB=true
+    healthcheck:
+      test: ["CMD", "lsof", "-t", "-i:3001"] # Caso utilize outra porta interna para o back, altere ela aqui também
+      timeout: 10s
+      retries: 5
+    networks:
+      - delivery-app-network
+  db:
+    image: mysql:5.7
+    container_name: delivery_db
+    platform: linux/x86_64
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    restart: 'always'
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "delivery_db"] # Deve aguardar o banco ficar operacional
+      timeout: 10s
+      retries: 5
+    cap_add:
+      - SYS_NICE # Deve omitir alertas menores
+    networks:
+      - delivery-app-network
+networks:
+  delivery-app-network:
+    driver: 'bridge'
