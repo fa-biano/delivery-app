@@ -22,18 +22,13 @@ O desenvolvimento desse projeto foi realizado durante o curso de Desenvolvimento
 ## ✨ Inicializando:
 
   Clone o repositório: `git clone git@github.com:fa-biano/delivery-app.git`
-
-  Instale as dependências `npm install`
   
   Renomeie os arquivos `.env.example` para `.env` nos diretórios `/frontend` e `/backend`
 
-  Rode um container Docker com MySql `docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=password -d -p 3306:3306 mysql:5.7`
+  Execute `docker compose up -d` para subir os 3 containers da aplicaçào: delivery_frontend, delivery_backend e delivery_db
 
-  Execute `npm start` para o PM2 instalar os serviços de frontend e backend e inicializá-los. (Os serviços ficarão rodando até serem encerrados)
-  
-  Para encerrar os serviços, execute `npm run stop`
+  Acesse a aplicação pelo navegador em `http://localhost:3000` ou a documentação da API em `http://localhost:3001/api-docs`
 
-  (Posteriormente irei adicionar um docker-compose para facilitar o processo de inicialização)
 
 ## 📭 Rotas da API:
 
